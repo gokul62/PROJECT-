@@ -99,14 +99,14 @@ module FIFO_TB;
   wire data_o;
 
   FIFO dut ( 
-    clk_i.(clk_i),
-    reset_i(reset_i),
-    data_i(data_i),
-    data_o(data_o),
-    write_en(write_en),
-    read_en(read_en),
-    full_o(full_o),
-    empty_o(empty_o)
+    .clk_1(clk_1),
+    .reset_i(reset_i),
+    .data_i(data_i),
+    .data_o(data_o),
+    .write_en(write_en),
+    .read_en(read_en),
+    .full_o(full_o),
+    .empty_o(empty_o)
   );
 
   clk_i = 0;
@@ -124,48 +124,48 @@ module FIFO_TB;
     #10 reset_i = 1;
 
      // Test Writing to FIFO
-        wr_en_i = 1'b1;
+        write_en = 1'b1;
         for (i = 0; i < 8; i = i + 1) begin
             data_i = i;
             #10;
             $display("Time: %0t | Write: %d | Full: %b | Empty: %b", $time, data_i, full_o, empty_o);
         end
-        wr_en_i = 1'b0;
+        write_en= 1'b0;
 
         // Test Reading from FIFO
-        rd_en_i = 1'b1;
+        read_en = 1'b1;
         for (i = 0; i < 8; i = i + 1) begin
             #10;
             $display("Time: %0t | Read: %d | Expected: %d | Empty: %b", $time, data_o, i, empty_o);
         end
-        rd_en_i = 1'b0;
+        read_n = 1'b0;
 
         // Underflow Test: Reading from Empty FIFO
-        rd_en_i = 1'b1;
+        read_n = 1'b1;
         #10;
         $display("Time: %0t | Read Attempted from Empty FIFO | Data: %d | Empty: %b", $time, data_o, empty_o);
-        rd_en_i = 1'b0;
+        read_n = 1'b0;
 
         // Overflow Test: Writing More Than Capacity
-        wr_en_i = 1'b1;
+    write_en = 1'b1;
         for (i = 0; i < 10; i = i + 1) begin
             data_i = i;
             #10;
             $display("Time: %0t | Write: %d | Full: %b", $time, data_i, full_o);
         end
-        wr_en_i = 1'b0;
+        write_en = 1'b0;
 
         // Simultaneous Write & Read
-        wr_en_i = 1'b1;
-        rd_en_i = 1'b1;
+        write_en = 1'b1;
+        read_en = 1'b1;
         for (i = 0; i < 8; i = i + 1) begin
             data_i = i + 16;
             #10;
             $display("Time: %0t | Write: %d | Read: %d | Full: %b | Empty: %b", 
                      $time, data_i, data_o, full_o, empty_o);
         end
-        wr_en_i = 1'b0;
-        rd_en_i = 1'b0;
+        write_en = 1'b0;
+        read_en = 1'b0;
 
         $stop;
     end
