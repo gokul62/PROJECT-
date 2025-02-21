@@ -138,13 +138,13 @@ module FIFO_TB;
             #10;
             $display("Time: %0t | Read: %d | Expected: %d | Empty: %b", $time, data_o, i, empty_o);
         end
-        read_n = 1'b0;
+        read_en = 1'b0;
 
         // Underflow Test: Reading from Empty FIFO
-        read_n = 1'b1;
+        read_en = 1'b1;
         #10;
         $display("Time: %0t | Read Attempted from Empty FIFO | Data: %d | Empty: %b", $time, data_o, empty_o);
-        read_n = 1'b0;
+        read_en = 1'b0;
 
         // Overflow Test: Writing More Than Capacity
     write_en = 1'b1;
